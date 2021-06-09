@@ -37,8 +37,13 @@ router.get('/documentation/:id', function (request, response) {
 router.post('/documentation', (request, response) => {
   const documentation = request.body;
   pool.query(
-    `INSERT INTO documentation(content) VALUES (?)`,
-    [documentation.content],
+    `INSERT INTO documentation(title, category, description, price) VALUES (?, ?, ?, ?)`,
+    [
+      documentation.title,
+      documentation.category,
+      documentation.description,
+      documentation.price,
+    ],
     (error, results) => {
       if (error) {
         response.status(500).send(error);
@@ -54,16 +59,16 @@ router.post('/documentation', (request, response) => {
 
 // update
 router.put('/documentation/:id', (request, response) => {
-  const { content } = request.body;
+  const { title, category, description, price } = request.body;
   const { id } = request.params;
   pool.query(
-    'UPDATE documentation SET content = ? WHERE id = ?',
-    [content, id],
+    'UPDATE documentation SET title, category, description, price = ? WHERE id = ?',
+    [title, category, description, price, id],
     (error, results) => {
       if (error) {
         response.status(500).send(error);
       } else if (results.affectedRows > 0) {
-        response.status(200).send({ id, content });
+        response.status(200).send({ id, title, category, description, price });
       } else {
         response.sendStatus(404);
       }
