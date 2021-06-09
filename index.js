@@ -1,11 +1,23 @@
-const app = require('./app');
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
 
-const PORT = process.env.PORT || 8000;
+const documentationRouter = require('./routes/documentation');
 
-app.listen(PORT, (err) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(`Express server listening on ${PORT}`);
-  }
+const app = express();
+
+app.use(express.json());
+
+const port = process.env.PORT || 8000;
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+  })
+);
+
+app.use('/documentation', documentationRouter);
+
+app.listen(port, () => {
+  console.log(`Express server listening on ${port}`);
 });
