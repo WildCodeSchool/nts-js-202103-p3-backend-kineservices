@@ -20,26 +20,28 @@ router.get('/', (request, response) => {
 router.post('/', (request, response) => {
   const { formContent } = request.body;
   pool.query(
-    'INSERT INTO user (firstname, lastname, picture, birthdate, email, password, RPPS, SIRET, address, phone, country, website) VALUES (?,?,?,?,?,?,?,?,?,?)',
+    'INSERT INTO user (firstname, lastname,birthdate, email, password, RPPS, SIRET, address, phone, country, website,role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
     [
-      formContent,
-      //   formContent.firstname,
-      //   formContent.lastname,
-      //   // formContent.picture,
-      //   formContent.birthdate,
-      //   formContent.email,
-      //   formContent.password,
-      //   formContent.RPPS,
-      //   formContent.SIRET,
-      //   formContent.address,
-      //   formContent.phone,
-      //   formContent.country,
-      //   formContent.website,
+      formContent.firstname,
+      formContent.lastname,
+      // formContent.picture,
+      // formContent.birthdate, //Incorrect datetime value:
+      (birthdate = '1983-02-05 00:00:00'),
+      formContent.email,
+      formContent.password,
+      formContent.RPPS,
+      formContent.SIRET,
+      formContent.address,
+      formContent.phone,
+      formContent.country,
+      formContent.website,
+      (role_id = '1'),
     ],
     (error, result) => {
       if (error) {
         response.status(500).send('Error Creating new User');
-        console.log(request.body);
+        console.log(formContent);
+        console.log(error);
       } else {
         response.status(200).send('User created');
         console.log(request.body);
