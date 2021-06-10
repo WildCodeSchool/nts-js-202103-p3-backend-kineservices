@@ -41,10 +41,10 @@ router.post('/', (request, response) => {
     `INSERT INTO documentation(title, category_id, user_id, description, price) VALUES (?, ?, ?, ?, ?)`,
     [
       documentation.title,
-      documentation.description,
-      documentation.price,
       documentation.category_id,
       documentation.user_id,
+      documentation.description,
+      documentation.price,
     ],
     (error, results) => {
       if (error) {
