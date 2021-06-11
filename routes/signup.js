@@ -17,6 +17,9 @@ router.get('/', (request, response) => {
   });
 });
 
+const role_id = '1';
+const birthdate = '1983-02-05 00:00:00';
+
 router.post('/', (request, response) => {
   const { formContent } = request.body;
   pool.query(
@@ -26,7 +29,7 @@ router.post('/', (request, response) => {
       formContent.lastname,
       // formContent.picture,
       // formContent.birthdate, //Incorrect datetime value:
-      (birthdate = '1983-02-05 00:00:00'),
+      birthdate,
       formContent.email,
       formContent.password,
       formContent.RPPS,
@@ -35,9 +38,9 @@ router.post('/', (request, response) => {
       formContent.phone,
       formContent.country,
       formContent.website,
-      (role_id = '1'),
+      role_id,
     ],
-    (error, result) => {
+    (error) => {
       if (error) {
         response.status(500).send('Error Creating new User');
         console.log(formContent);
@@ -45,7 +48,7 @@ router.post('/', (request, response) => {
       } else {
         response.status(200).send('User created');
         console.log(request.body);
-        console.log(result);
+        // console.log(result);
       }
     }
   );
