@@ -28,7 +28,7 @@ router.post('/', (request, response) => {
       formContent.firstname,
       formContent.lastname,
       // formContent.picture,
-      // formContent.birthdate, //Incorrect datetime value:
+      // formContent.birthdate,
       birthdate,
       formContent.email,
       formContent.password,
