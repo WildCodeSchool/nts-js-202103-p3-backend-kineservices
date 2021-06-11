@@ -4,7 +4,6 @@ const express = require('express');
 
 const router = express.Router();
 const pool = require('../config/mysql');
-// router.use(express.json());
 
 router.get('/', (request, response) => {
   console.log(request);
@@ -17,10 +16,11 @@ router.get('/', (request, response) => {
   });
 });
 
-const role_id = '1';
-const birthdate = '1983-02-05 00:00:00';
-
 router.post('/', (request, response) => {
+  // TODO : Valeurs de tests, a supprimer plus tard.
+  const role_id = '1';
+  const birthdate = '1983-02-05 00:00:00';
+  // TODO : Valeurs de tests, a supprimer plus tard.
   const { formContent } = request.body;
   pool.query(
     'INSERT INTO user (firstname, lastname,birthdate, email, password, RPPS, SIRET, address, phone, country, website,role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
