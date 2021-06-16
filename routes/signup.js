@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable func-names */
 const express = require('express');
+
 const router = express.Router();
-const pool = require('../config/mysql');
 const bcrypt = require('bcrypt');
+const pool = require('../config/mysql');
 
 router.get('/', (request, response) => {
-  console.log(request);
   pool.query('SELECT * FROM user', (error, results) => {
     if (error) {
       response.status(500).send(error);
@@ -21,7 +21,7 @@ router.post('/', (request, response) => {
   const role_id = '1';
   // TODO : Valeurs de tests, a supprimer plus tard.
   const { formContent } = request.body;
-  //cryptage du mot de passe
+  // cryptage du mot de passe
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
       console.log(`bcrypt ${error}`);
@@ -43,6 +43,7 @@ router.post('/', (request, response) => {
           formContent.website,
           role_id,
         ],
+        // eslint-disable-next-line no-shadow
         (error) => {
           if (error) {
             response.status(500).send(`Error Creating new User${error}`);

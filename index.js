@@ -3,6 +3,7 @@ require('dotenv').config();
 const cors = require('cors');
 const documentationRouter = require('./routes/documentation');
 const signupRouter = require('./routes/signup');
+const signIn = require('./routes/signIn');
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(
 );
 
 app.use('/documentation', documentationRouter);
+app.use('/connexion', signIn);
 app.use('/signup', signupRouter);
 
 app.listen(port, () => {
