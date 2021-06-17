@@ -24,7 +24,7 @@ router.post('/', (request, response) => {
   // cryptage du mot de passe
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
-      console.log(`bcrypt ${error}`);
+      console.log(`bcrypt error ${error}`);
     } else {
       pool.query(
         'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, SIRET, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',

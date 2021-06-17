@@ -48,6 +48,7 @@ router.post('/', (request, response) => {
     ],
     (error, results) => {
       if (error) {
+        console.log(error);
         response.status(500).send(error);
       } else {
         response.status(201).send({
