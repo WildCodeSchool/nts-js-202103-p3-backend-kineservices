@@ -17,9 +17,6 @@ router.get('/', (request, response) => {
 });
 
 router.post('/', (request, response) => {
-  // TODO : Valeurs de tests, a supprimer plus tard.
-  const role_id = '1';
-  // TODO : Valeurs de tests, a supprimer plus tard.
   const { formContent } = request.body;
   // cryptage du mot de passe
   bcrypt.hash(formContent.password, 10, (error, hash) => {
@@ -41,7 +38,7 @@ router.post('/', (request, response) => {
           formContent.phone,
           formContent.country,
           formContent.website,
-          role_id,
+          formContent.role_id,
         ],
         // eslint-disable-next-line no-shadow
         (error) => {
