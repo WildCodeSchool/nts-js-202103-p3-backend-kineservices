@@ -17,13 +17,11 @@ router.get('/', (request, response) => {
 });
 
 router.post('/', (request, response) => {
-  // TODO : Valeurs de tests, a supprimer plus tard.
-  const role_id = '1';
-
   const { formContent } = request.body;
+  // cryptage du mot de passe
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
-      console.log(`bcrypt ${error}`);
+      console.log(`bcrypt error ${error}`);
     } else {
       pool.query(
         'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, siret, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -40,7 +38,7 @@ router.post('/', (request, response) => {
           formContent.phone,
           formContent.country,
           formContent.website,
-          role_id,
+          formContent.role_id,
         ],
         // eslint-disable-next-line no-shadow
         (error) => {
