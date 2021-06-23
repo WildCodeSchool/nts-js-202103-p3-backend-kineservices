@@ -4,7 +4,7 @@ const router = express.Router();
 const pool = require('../config/mysql');
 
 router.get('/', function (request, response) {
-  pool.query('SELECT * FROM documentation', (error, results) => {
+  pool.query('SELECT * FROM users', (error, results) => {
     if (error) {
       response.status(500).send(error);
     } else {
