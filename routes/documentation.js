@@ -62,18 +62,16 @@ router.post('/', (request, response) => {
 
 // update
 router.put('/:id', (request, response) => {
-  const { title, category_id, user_id, description, price } = request.body;
+  const result = request.body;
   const { id } = request.params;
   pool.query(
-    'UPDATE documentation SET title, category_id, user_id, description, price = ? WHERE id = ?',
-    [title, category_id, user_id, description, price, id],
+    'UPDATE documentation SET ? WHERE id = ?',
+    [result, id],
     (error, results) => {
       if (error) {
         response.status(500).send(error);
       } else if (results.affectedRows > 0) {
-        response
-          .status(200)
-          .send({ id, title, category_id, user_id, description, price });
+        response.status(200).send(result);
       } else {
         response.sendStatus(404);
       }
