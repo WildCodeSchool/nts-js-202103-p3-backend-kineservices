@@ -37,7 +37,6 @@ router.post('/', authJwt, (request, response) => {
                 user = {
                   id: results[0].id,
                   email: results[0].email,
-                  isConnected: responseCrypted, // true
                   auth: token,
                 };
                 response.status(200).send(user);
@@ -45,7 +44,6 @@ router.post('/', authJwt, (request, response) => {
                 response.send(error);
               } else {
                 response.status(403).send('Votre mot de passe est eronné');
-                // renvoies false
               }
             }
           );
