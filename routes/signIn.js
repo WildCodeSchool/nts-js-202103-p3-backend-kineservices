@@ -11,7 +11,6 @@ const { JWT_AUTH_SECRET } = process.env;
 
 router.post('/', authJwt, (request, response) => {
   const { email, password } = request.body;
-  let user = {};
   if (!email || !password) {
     response
       .status(400)
@@ -31,15 +30,14 @@ router.post('/', authJwt, (request, response) => {
             results[0].password,
             (error, responseCrypted) => {
               if (responseCrypted) {
+                const user = {
+                  id: results[0].id,
+                  email: results[0].email,
+                };
                 const token = jwt.sign({ id: user.id }, JWT_AUTH_SECRET, {
                   expiresIn: 10000,
                 });
-                user = {
-                  id: results[0].id,
-                  email: results[0].email,
-                  auth: token,
-                };
-                response.status(200).send(user);
+                response.status(200).send({ user, token });
               } else if (error) {
                 response.send(error);
               } else {
