@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/mysql');
 
-router.post('/:id', function (request, response) {
+router.get('/:id', function (request, response) {
   const { id } = request.params;
   pool.query('SELECT * FROM user WHERE id = ? ', [id], (error, results) => {
     if (error) {
