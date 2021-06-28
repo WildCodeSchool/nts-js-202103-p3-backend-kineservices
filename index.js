@@ -22,7 +22,7 @@ app.use('/documentation', documentationRouter);
 app.use('/connexion', signIn);
 app.use('/signup', signupRouter);
 app.use('/category', categoryRouter);
-app.use('/user', userRouter);
+app.use('/utilisateur', userRouter);
 
 app.listen(port, () => {
   console.log(`Express server listening on ${port}`);
