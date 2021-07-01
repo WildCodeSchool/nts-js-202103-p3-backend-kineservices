@@ -12,7 +12,6 @@ router.get('/', function (request, response) {
     } else {
       response.send(results);
     }
-    console.log(error, results);
   });
 });
 
@@ -42,7 +41,6 @@ router.post('/', (request, response) => {
     ],
     (error, results) => {
       if (error) {
-        console.log(error);
         response.status(500).send(error);
       } else {
         response.status(201).send({
@@ -63,7 +61,6 @@ router.put('/:id', (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).send(error);
-        console.log(error);
       } else if (results.affectedRows > 0) {
         response.status(200).send(result);
       } else {
