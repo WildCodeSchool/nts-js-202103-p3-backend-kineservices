@@ -1,13 +1,15 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-
 const documentationRouter = require('./routes/documentation');
+const signupRouter = require('./routes/signup');
+const signIn = require('./routes/signIn');
 const categoryRouter = require('./routes/category');
+const userRouter = require('./routes/profile');
 const serviceRouter = require('./routes/service');
 
-const app = express();
 
+const app = express();
 app.use(express.json());
 
 const port = process.env.PORT || 8080;
@@ -19,8 +21,12 @@ app.use(
 );
 
 app.use('/documentation', documentationRouter);
+app.use('/connexion', signIn);
+app.use('/signup', signupRouter);
 app.use('/category', categoryRouter);
+app.use('/utilisateur', userRouter);
 app.use('/service', serviceRouter);
+
 
 app.listen(port, () => {
   console.log(`Express server listening on ${port}`);
