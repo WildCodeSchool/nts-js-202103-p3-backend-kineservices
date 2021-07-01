@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const documentationRouter = require('./routes/documentation');
 const categoryRouter = require('./routes/category');
+const serviceRouter = require('./routes/service');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(
 
 app.use('/documentation', documentationRouter);
 app.use('/category', categoryRouter);
+app.use('/service', serviceRouter);
 
 app.listen(port, () => {
   console.log(`Express server listening on ${port}`);
