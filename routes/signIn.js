@@ -12,7 +12,7 @@ router.post('/', (request, response) => {
     [email],
     (error, results) => {
       if (error) {
-        response.send(error);
+        response.status(500).send(error);
       } else {
         bcrypt.compare(password, results[0].password, (error, res) => {
           if (res) {
