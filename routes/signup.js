@@ -18,10 +18,9 @@ router.get('/', (request, response) => {
 
 router.post('/', (request, response) => {
   const { formContent } = request.body;
-  // cryptage du mot de passe
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
-      console.log(`bcrypt error ${error}`);
+      response.status(500).send(error);
     } else {
       pool.query(
         'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, siret, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
