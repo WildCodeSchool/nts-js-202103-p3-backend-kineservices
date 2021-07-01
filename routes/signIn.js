@@ -15,9 +15,7 @@ router.post('/', (request, response) => {
         response.status(500).send(error);
       } else {
         bcrypt.compare(password, results[0].password, (error, res) => {
-          if (res) {
-            response.send(res);
-          } else if (error) {
+          if (error) {
             response.status(500).send(error);
           } else {
             response.send(res);
