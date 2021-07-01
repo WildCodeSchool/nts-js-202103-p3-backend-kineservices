@@ -5,7 +5,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/mysql');
 
-// get all services
 router.get('/', function (request, response) {
   pool.query('SELECT * FROM service', (error, results) => {
     if (error) {
@@ -17,7 +16,6 @@ router.get('/', function (request, response) {
   });
 });
 
-// get with id
 router.get('/:id', function (request, response) {
   const { id } = request.params;
   pool.query('SELECT * FROM service WHERE id = ?', [id], (error, results) => {
@@ -31,7 +29,6 @@ router.get('/:id', function (request, response) {
   });
 });
 
-// create
 router.post('/', (request, response) => {
   const service = request.body;
   pool.query(
@@ -57,7 +54,6 @@ router.post('/', (request, response) => {
   );
 });
 
-// update
 router.put('/:id', (request, response) => {
   const result = request.body;
   const { id } = request.params;
@@ -77,7 +73,6 @@ router.put('/:id', (request, response) => {
   );
 });
 
-// delete
 router.delete('/:id', (request, response) => {
   const { id } = request.params;
   pool.query('DELETE FROM service WHERE id = ?', [id], (error, results) => {
