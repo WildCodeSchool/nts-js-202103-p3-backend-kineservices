@@ -6,7 +6,6 @@ const pool = require('../config/mysql');
 
 router.post('/', (request, response) => {
   const { formContent } = request.body;
-  console.log(formContent);
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
       response.status(500).send(error);
@@ -30,7 +29,6 @@ router.post('/', (request, response) => {
         ],
         (err, results) => {
           if (err) {
-            console.log(err);
             response.status(500).send(err);
           } else {
             response.status(201).send({ id: results.insertId });

@@ -20,7 +20,6 @@ router.post('/', authJwt, (request, response) => {
       [email],
       (error, results) => {
         if (error) {
-          console.log(error);
           response.status(500).send(error);
         } else if (results.length === 0) {
           response.status(403).send(`invalid email`);
