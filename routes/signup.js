@@ -11,7 +11,7 @@ router.post('/', (request, response) => {
       response.status(500).send(error);
     } else {
       pool.query(
-        'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, SIRET, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+        'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, siret, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
         [
           formContent.firstname,
           formContent.lastname,
@@ -20,7 +20,7 @@ router.post('/', (request, response) => {
           formContent.email,
           hash,
           formContent.RPPS,
-          formContent.SIRET,
+          formContent.siret,
           formContent.address,
           formContent.phone,
           formContent.country,
