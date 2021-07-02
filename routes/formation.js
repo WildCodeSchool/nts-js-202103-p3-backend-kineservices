@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const express = require('express');
 
 const router = express.Router();
@@ -29,12 +30,14 @@ router.get('/:id', (request, response) => {
 
 router.post('/', (request, response) => {
   const formation = request.body;
+
+  const user_id = 2; // monsieur poulpe est le seul utilisateur à pouvoir publier pour le moment
   pool.query(
     `INSERT INTO formation (title, category_id, user_id, date, price, website, description) VALUES (?,?,?,?,?,?,?)`,
     [
       formation.title,
       formation.category_id,
-      formation.user_id,
+      user_id,
       formation.date,
       formation.price,
       formation.website,
