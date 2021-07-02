@@ -10,6 +10,22 @@ const { JWT_AUTH_SECRET } = process.env;
 
 router.post('/', authJwt, (request, response) => {
   const { email, password } = request.body;
+
+  pool.query(
+    'SELECT * FROM user WHERE email = ?',
+    [email],
+    (error, results) => {
+      if (error) {
+        response.status(500).send(error);
+      } else {
+        bcrypt.compare(password, results[0].password, (error, res) => {
+          if (error) {
+            response.status(500).send(error);
+          } else {
+            response.send(res);
+          }
+        });
+
   if (!email || !password) {
     response
       .status(400)

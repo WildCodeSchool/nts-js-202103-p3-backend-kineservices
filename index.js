@@ -4,8 +4,9 @@ const cors = require('cors');
 const documentationRouter = require('./routes/documentation');
 const signupRouter = require('./routes/signup');
 const categoryRouter = require('./routes/category');
-const serviceRouter = require('./routes/service');
 const signIn = require('./routes/signIn');
+const formationRouter = require('./routes/formation');
+const userRouter = require('./routes/profile');
 
 const app = express();
 app.use(express.json());
@@ -25,6 +26,11 @@ app.use('/service', serviceRouter);
 app.use('/connexion', signIn);
 app.use('/signup', signupRouter);
 app.use('/category', categoryRouter);
+
+app.use('/formation', formationRouter);
+
+app.use('/utilisateur', userRouter);
+app.use('/service', serviceRouter);
 
 app.listen(port, () => {
   console.log(`Express server listening on ${port}`);
