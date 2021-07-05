@@ -6,13 +6,16 @@ const router = express.Router();
 const pool = require('../config/mysql');
 
 router.get('/', function (request, response) {
-  pool.query('SELECT * FROM formation', (error, results) => {
-    if (error) {
-      response.status(500).send(error);
-    } else {
-      response.send(results);
+  pool.query(
+    'SELECT formation.id,title,website,description,user_id,price,name FROM formation LEFT JOIN category ON category.id=formation.category_id',
+    (error, results) => {
+      if (error) {
+        response.status(500).send(error);
+      } else {
+        response.send(results);
+      }
     }
-  });
+  );
 });
 
 router.get('/:id', (request, response) => {
@@ -45,6 +48,7 @@ router.post('/', (request, response) => {
     ],
     (error, results) => {
       if (error) {
+        console.log(error);
         response.status(500).send(error);
       } else {
         response.status(201).send({
