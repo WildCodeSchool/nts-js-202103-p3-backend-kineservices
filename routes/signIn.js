@@ -26,44 +26,49 @@ router.post('/', authJwt, (request, response) => {
           }
         });
 
-  if (!email || !password) {
-    response
-      .status(400)
-      .send('Veuillez sasir votre mot de passe ou votre email');
-  } else {
-    pool.query(
-      'SELECT * FROM user WHERE email = ?',
-      [email],
-      (error, results) => {
-        if (error) {
-          response.status(500).send(error);
-        } else if (results.length === 0) {
-          response.status(403).send(`invalid email`);
+        if (!email || !password) {
+          response
+            .status(400)
+            .send('Veuillez sasir votre mot de passe ou votre email');
         } else {
-          bcrypt.compare(
-            password,
-            results[0].password,
-            (err, responseCrypted) => {
-              if (responseCrypted) {
-                const user = {
-                  id: results[0].id,
-                  email: results[0].email,
-                };
-                const token = jwt.sign({ id: user.id }, JWT_AUTH_SECRET, {
-                  expiresIn: 10000,
-                });
-                response.status(200).send({ user, token });
-              } else if (err) {
-                response.send(err);
+          pool.query(
+            'SELECT * FROM user WHERE email = ?',
+            [email],
+            (error, results) => {
+              if (error) {
+                response.status(500).send(error);
+              } else if (results.length === 0) {
+                response.status(403).send(`invalid email`);
               } else {
-                response.status(403).send('Votre mot de passe est eronné');
+                bcrypt.compare(
+                  password,
+                  results[0].password,
+                  (errorCrypted, responseCrypted) => {
+                    if (responseCrypted) {
+                      const user = {
+                        id: results[0].id,
+                        email: results[0].email,
+                      };
+                      const token = jwt.sign({ id: user.id }, JWT_AUTH_SECRET, {
+                        expiresIn: 10000,
+                      });
+                      response.status(200).send({ token, user });
+                    } else if (errorCrypted) {
+                      response.send(errorCrypted);
+                    } else {
+                      response
+                        .status(403)
+                        .send('Votre mot de passe est eronné');
+                    }
+                  }
+                );
               }
             }
           );
         }
       }
-    );
-  }
+    }
+  );
 });
 
 module.exports = router;
