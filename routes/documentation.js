@@ -36,6 +36,7 @@ router.get('/:id', function (request, response) {
 
 // create
 router.post('/', (request, response) => {
+  console.log(response);
   const documentation = request.body;
   pool.query(
     `INSERT INTO documentation(title, category_id, user_id, description, price) VALUES (?, ?, ?, ?, ?)`,
