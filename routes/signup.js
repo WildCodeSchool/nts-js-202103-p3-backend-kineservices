@@ -2,11 +2,28 @@ const express = require('express');
 
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const fs = require('fs');
+
+const upload = multer({ dest: 'tmp/' });
 const pool = require('../config/mysql');
 
-router.post('/', (request, response) => {
+router.post('/', upload.single('picture'), (request, response) => {
   const { formContent } = request.body;
-  console.log(formContent);
+  console.log(request.file);
+  fs.rename(
+    request.file.path,
+    `public/images/${request.file.originalname}`,
+    (errorPicture) => {
+      if (errorPicture) {
+        response.send("le fichier n'a pas pu etre télechargé");
+      } else {
+        console.log(request);
+        response.send('lefichier a été telechargé avec succes');
+      }
+    }
+  );
+
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
       response.status(500).send(error);
@@ -16,7 +33,7 @@ router.post('/', (request, response) => {
         [
           formContent.firstname,
           formContent.lastname,
-          // formContent.picture,
+          formContent.picture,
           formContent.birthdate,
           formContent.email,
           hash,
