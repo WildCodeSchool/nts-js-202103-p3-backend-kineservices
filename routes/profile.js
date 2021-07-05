@@ -15,4 +15,22 @@ router.post('/:id', (request, response) => {
   });
 });
 
+router.put('/:id', (request, response) => {
+  const userToUpdate = request.body;
+  const { id } = request.params;
+  pool.query(
+    'UPDATE user SET ? WHERE id = ?',
+    [userToUpdate, id],
+    (error, results) => {
+      if (error) {
+        response.status(500).send(error);
+      } else if (results.affectedRows > 0) {
+        response.status(200).send(results);
+      } else {
+        response.sendStatus(404);
+      }
+    }
+  );
+});
+
 module.exports = router;

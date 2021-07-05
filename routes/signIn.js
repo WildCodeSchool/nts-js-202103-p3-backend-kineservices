@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const express = require('express');
 
 const router = express.Router();
