@@ -27,12 +27,11 @@ router.post('/', (request, response) => {
           formContent.website,
           formContent.role_id,
         ],
-
         (err, results) => {
           if (err) {
             response.status(500).send(err);
           } else {
-            response.status(200).send({ id: results.insertId });
+            response.status(201).send({ id: results.insertId });
           }
         }
       );
