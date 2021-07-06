@@ -10,17 +10,18 @@ const pool = require('../config/mysql');
 
 router.post('/', upload.single('picture'), (request, response) => {
   const { formContent } = request.body;
-  fs.rename(
-    request.file.path,
-    `public/images/${request.file.originalname}`,
-    (errorPicture) => {
-      if (errorPicture) {
-        response.status(500).send("Le fichier n'a pas pu être téléchargé");
-      } else {
-        response.send('Le fichier a été téléchargé avec succès');
-      }
-    }
-  );
+  console.log(formContent);
+  // fs.rename(
+  //   request.file.path,
+  //   `public/images/${request.file.originalname}`,
+  //   (errorPicture) => {
+  //     if (errorPicture) {
+  //       response.status(500).send("Le fichier n'a pas pu être téléchargé");
+  //     } else {
+  //       response.send('Le fichier a été téléchargé avec succès');
+  //     }
+  //   }
+  // );
 
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
@@ -31,7 +32,7 @@ router.post('/', upload.single('picture'), (request, response) => {
         [
           formContent.firstname,
           formContent.lastname,
-          formContent.picture,
+          // formContent.picture,
           formContent.birthdate,
           formContent.email,
           hash,
