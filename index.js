@@ -12,7 +12,7 @@ const serviceRouter = require('./routes/service');
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 
 app.use(
   cors({
@@ -24,8 +24,9 @@ app.use('/documentation', documentationRouter);
 app.use('/category', categoryRouter);
 app.use('/service', serviceRouter);
 app.use('/connexion', signIn);
-app.use('/signup', signupRouter);
 app.use('/formation', formationRouter);
+app.use('/profil', userRouter);
+app.use('/signup', signupRouter);
 app.use('/utilisateur', userRouter);
 
 app.listen(port, () => {
