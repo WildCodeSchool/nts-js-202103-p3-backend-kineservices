@@ -10,7 +10,6 @@ const pool = require('../config/mysql');
 
 router.post('/', upload.single('picture'), (request, response) => {
   const { formContent } = request.body;
-  console.log(request.file);
   fs.rename(
     request.file.path,
     `public/images/${request.file.originalname}`,
@@ -18,7 +17,6 @@ router.post('/', upload.single('picture'), (request, response) => {
       if (errorPicture) {
         response.send("le fichier n'a pas pu etre télechargé");
       } else {
-        console.log(request);
         response.send('lefichier a été telechargé avec succes');
       }
     }
