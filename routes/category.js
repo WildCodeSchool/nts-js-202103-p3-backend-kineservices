@@ -8,6 +8,7 @@ router.get('/', function (request, response) {
     if (error) {
       response.status(500).send(error);
     } else {
+      console.log(results);
       response.send(results);
     }
   });
