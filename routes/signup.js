@@ -15,9 +15,9 @@ router.post('/', upload.single('picture'), (request, response) => {
     `public/images/${request.file.originalname}`,
     (errorPicture) => {
       if (errorPicture) {
-        response.status(500).send("le fichier n'a pas pu etre télechargé");
+        response.status(500).send("Le fichier n'a pas pu être télechargé");
       } else {
-        response.send('le fichier a été telechargé avec succes');
+        response.send('Le fichier a été telechargé avec succès');
       }
     }
   );
