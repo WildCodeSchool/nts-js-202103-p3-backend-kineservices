@@ -27,7 +27,7 @@ router.post('/', authJwt, (request, response) => {
           bcrypt.compare(
             password,
             results[0].password,
-            (errorCrypted, responseCrypted) => {
+            (error, responseCrypted) => {
               if (responseCrypted) {
                 const user = {
                   id: results[0].id,
@@ -37,8 +37,8 @@ router.post('/', authJwt, (request, response) => {
                   expiresIn: 10000,
                 });
                 response.status(200).send({ user, token });
-              } else if (errorCrypted) {
-                response.send(errorCrypted);
+              } else if (error) {
+                response.send(error);
               } else {
                 response.status(403).send('Votre mot de passe est eronné');
               }

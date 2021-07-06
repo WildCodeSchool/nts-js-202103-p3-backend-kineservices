@@ -21,13 +21,13 @@ app.use(
 );
 
 app.use('/documentation', documentationRouter);
-app.use('/signup', signupRouter);
 app.use('/category', categoryRouter);
 app.use('/service', serviceRouter);
 app.use('/connexion', signIn);
-app.use('/category', categoryRouter);
 app.use('/formation', formationRouter);
 app.use('/profil', userRouter);
+app.use('/signup', signupRouter);
+app.use('/utilisateur', userRouter);
 
 app.listen(port, () => {
   console.log(`Express server listening on ${port}`);
