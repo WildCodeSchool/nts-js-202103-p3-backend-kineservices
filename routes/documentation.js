@@ -3,6 +3,10 @@
 const express = require('express');
 
 const router = express.Router();
+const multer = require('multer');
+
+const upload = multer({ dest: 'tmp/' });
+const fs = require('fs');
 const pool = require('../config/mysql');
 
 // trouver all doc
@@ -35,31 +39,57 @@ router.get('/:id', function (request, response) {
 });
 
 // create
-router.post('/', (request, response) => {
-  console.log(response);
+router.post('/', upload.single('file'), (request, response) => {
   const documentation = request.body;
-  pool.query(
-    `INSERT INTO documentation(title, category_id, user_id, description, price) VALUES (?, ?, ?, ?, ?)`,
-    [
-      documentation.title,
-      documentation.category_id,
-      documentation.user_id,
-      documentation.description,
-      documentation.price,
-    ],
-    (error, results) => {
-      if (error) {
-        console.log(error);
-        response.status(500).send(error);
-      } else {
-        response.status(201).send({
-          id: results.insertId,
-          ...documentation,
-        });
-      }
+  const folder = `public/images/${documentation.user_id}/`;
+  fs.mkdirSync(folder, { recursive: true });
+  const fileName = `${folder}/${Date.now()}-${request.file.originalname}`;
+  fs.rename(request.file.path, fileName, function (err) {
+    if (err) {
+      response.status(500).send(err);
+    } else {
+      pool.query(
+        `INSERT INTO documentation(title, category_id, user_id, description, price, file) VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          documentation.title,
+          documentation.category_id,
+          documentation.user_id,
+          documentation.description,
+          documentation.price,
+          fileName,
+        ],
+        (error, results) => {
+          if (error) {
+            response.status(500).send(error);
+          } else {
+            response.status(201).send({
+              id: results.insertId,
+              ...documentation,
+            });
+          }
+        }
+      );
     }
-  );
+  });
 });
+
+// // router.post(
+//   '/uploaddufichier',
+//   upload.single('monfichier'),
+//   function (req, res, next) {
+//     fs.rename(
+//       req.file.path,
+//       `public/images/${req.file.originalname}`,
+//       function (err) {
+//         if (err) {
+//           res.send('problème lors du téléchargement');
+//         } else {
+//           res.send('Fichier uploadé avec succès!');
+//         }
+//       }
+//     );
+//   }
+// // );
 
 // update
 router.put('/:id', (request, response) => {
