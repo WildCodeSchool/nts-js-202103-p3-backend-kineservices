@@ -24,6 +24,7 @@ app.use('/documentation', documentationRouter);
 app.use('/category', categoryRouter);
 app.use('/service', serviceRouter);
 app.use('/connexion', signIn);
+app.use('/category', categoryRouter);
 app.use('/formation', formationRouter);
 app.use('/profil', userRouter);
 app.use('/signup', signupRouter);
