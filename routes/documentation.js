@@ -9,7 +9,6 @@ const upload = multer({ dest: 'tmp/' });
 const fs = require('fs');
 const pool = require('../config/mysql');
 
-// trouver all doc
 router.get('/', function (request, response) {
   pool.query('SELECT * FROM documentation', (error, results) => {
     if (error) {
@@ -20,7 +19,6 @@ router.get('/', function (request, response) {
   });
 });
 
-// trouver avec id
 router.get('/:id', function (request, response) {
   const { id } = request.params;
   pool.query(
@@ -38,7 +36,6 @@ router.get('/:id', function (request, response) {
   );
 });
 
-// create
 router.post('/', upload.single('file'), (request, response) => {
   const documentation = request.body;
   const folder = `public/images/${documentation.user_id}/`;
@@ -73,25 +70,6 @@ router.post('/', upload.single('file'), (request, response) => {
   });
 });
 
-// // router.post(
-//   '/uploaddufichier',
-//   upload.single('monfichier'),
-//   function (req, res, next) {
-//     fs.rename(
-//       req.file.path,
-//       `public/images/${req.file.originalname}`,
-//       function (err) {
-//         if (err) {
-//           res.send('problème lors du téléchargement');
-//         } else {
-//           res.send('Fichier uploadé avec succès!');
-//         }
-//       }
-//     );
-//   }
-// // );
-
-// update
 router.put('/:id', (request, response) => {
   const result = request.body;
   const { id } = request.params;
@@ -110,7 +88,6 @@ router.put('/:id', (request, response) => {
   );
 });
 
-// delete
 router.delete('/:id', (request, response) => {
   const { id } = request.params;
   pool.query(
