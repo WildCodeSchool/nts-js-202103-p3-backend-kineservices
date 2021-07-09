@@ -3,19 +3,5 @@ node_modules
 package-lock.json
 tmp
 public.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # vs code custom colors
 .vscode
