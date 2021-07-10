@@ -20,7 +20,7 @@ const uploadFile = multer({
     ) {
       cb(null, true);
     } else {
-      cb(new multer.MulterError('le fichier doit être au format pdf'));
+      cb(new multer.MulterError("Ce type de fichier n'est pas supporté"));
     }
   },
   dest: 'tmp/',
