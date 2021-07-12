@@ -59,6 +59,7 @@ router.get('/:id', function (request, response) {
 
 router.post('/', uploadFile.single('file'), (request, response) => {
   const documentation = request.body;
+  console.log(documentation);
   const folder = `public/images/${documentation.user_id}/`;
   fs.mkdirSync(folder, { recursive: true });
   const fileName = `${folder}/${Date.now()}-${request.file.originalname}`;
