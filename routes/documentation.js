@@ -16,7 +16,9 @@ const uploadFile = multer({
       file.mimetype === 'application/vnd.ms-powerpoint' ||
       file.mimetype ===
         'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
-      file.mimetype === 'application/vnd.oasis.opendocument.text'
+      file.mimetype === 'application/vnd.oasis.opendocument.text' ||
+      file.mimetype === 'application/vnd.amazon.ebook' ||
+      file.mimetype === 'application/epub+zip'
     ) {
       cb(null, true);
     } else {
