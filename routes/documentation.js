@@ -1,11 +1,35 @@
 /* eslint-disable camelcase */
 /* eslint-disable func-names */
 const express = require('express');
+const multer = require('multer');
 
 const router = express.Router();
+
+const uploadFile = multer({
+  limits: { fileSize: Infinity },
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === 'application/pdf' ||
+      file.mimetype === 'application/msword' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      file.mimetype === 'application/vnd.ms-powerpoint' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+      file.mimetype === 'application/vnd.oasis.opendocument.text' ||
+      file.mimetype === 'application/vnd.amazon.ebook' ||
+      file.mimetype === 'application/epub+zip'
+    ) {
+      cb(null, true);
+    } else {
+      cb(new multer.MulterError('erreur'));
+    }
+  },
+  dest: 'tmp/',
+});
+const fs = require('fs');
 const pool = require('../config/mysql');
 
-// trouver all doc
 router.get('/', function (request, response) {
   pool.query('SELECT * FROM documentation', (error, results) => {
     if (error) {
@@ -16,7 +40,6 @@ router.get('/', function (request, response) {
   });
 });
 
-// trouver avec id
 router.get('/:id', function (request, response) {
   const { id } = request.params;
   pool.query(
@@ -34,34 +57,40 @@ router.get('/:id', function (request, response) {
   );
 });
 
-// create
-router.post('/', (request, response) => {
-  console.log(response);
+router.post('/', uploadFile.single('file'), (request, response) => {
   const documentation = request.body;
-  pool.query(
-    `INSERT INTO documentation(title, category_id, user_id, description, price) VALUES (?, ?, ?, ?, ?)`,
-    [
-      documentation.title,
-      documentation.category_id,
-      documentation.user_id,
-      documentation.description,
-      documentation.price,
-    ],
-    (error, results) => {
-      if (error) {
-        console.log(error);
-        response.status(500).send(error);
-      } else {
-        response.status(201).send({
-          id: results.insertId,
-          ...documentation,
-        });
-      }
+  const folder = `public/images/${documentation.user_id}/`;
+  fs.mkdirSync(folder, { recursive: true });
+  const fileName = `${folder}/${Date.now()}-${request.file.originalname}`;
+  fs.rename(request.file.path, fileName, function (err) {
+    if (err) {
+      response.status(500).send(err);
+    } else {
+      pool.query(
+        `INSERT INTO documentation(title, category_id, user_id, description, price, file) VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          documentation.title,
+          documentation.category_id,
+          documentation.user_id,
+          documentation.description,
+          documentation.price,
+          fileName,
+        ],
+        (error, results) => {
+          if (error) {
+            response.status(500).send(error);
+          } else {
+            response.status(201).send({
+              id: results.insertId,
+              ...documentation,
+            });
+          }
+        }
+      );
     }
-  );
+  });
 });
 
-// update
 router.put('/:id', (request, response) => {
   const result = request.body;
   const { id } = request.params;
@@ -80,7 +109,6 @@ router.put('/:id', (request, response) => {
   );
 });
 
-// delete
 router.delete('/:id', (request, response) => {
   const { id } = request.params;
   pool.query(

@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const bcrypt = require('bcrypt');
+
 const pool = require('../config/mysql');
 
 router.post('/', (request, response) => {

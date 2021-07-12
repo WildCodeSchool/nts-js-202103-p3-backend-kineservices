@@ -7,7 +7,6 @@ const pool = require('../config/mysql');
 const authJwt = require('./webToken');
 
 const { JWT_AUTH_SECRET } = process.env;
-
 router.post('/', authJwt, (request, response) => {
   const { email, password } = request.body;
   if (!email || !password) {
