@@ -2,53 +2,41 @@ const express = require('express');
 
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const multer = require('multer');
-const fs = require('fs');
 
-const upload = multer({ dest: 'tmp/' });
 const pool = require('../config/mysql');
 
-router.post('/', upload.single('picture'), (request, response) => {
-  const { formContent } = request.body;
-  console.log(formContent);
-  // fs.rename(
-  //   request.file.path,
-  //   `public/images/${request.file.originalname}`,
-  //   (errorPicture) => {
-  //     if (errorPicture) {
-  //       response.status(500).send("Le fichier n'a pas pu être téléchargé");
-  //     } else {
-  //       response.send('Le fichier a été téléchargé avec succès');
-  //     }
-  //   }
-  // );
-
-  bcrypt.hash(formContent.password, 10, (error, hash) => {
+router.post('/', (request, response) => {
+  const { user } = request.body;
+  console.log(user.password);
+  bcrypt.hash(user.password, 10, (error, hash) => {
     if (error) {
       response.status(500).send(error);
+      console.log(error);
     } else {
       pool.query(
-        'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, siret, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+        'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, SIRET, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
         [
-          formContent.firstname,
-          formContent.lastname,
+          user.firstname,
+          user.lastname,
           // formContent.picture,
-          formContent.birthdate,
-          formContent.email,
+          user.birthdate,
+          user.email,
           hash,
-          formContent.RPPS,
-          formContent.siret,
-          formContent.address,
-          formContent.phone,
-          formContent.country,
-          formContent.website,
-          formContent.role_id,
+          user.RPPS,
+          user.SIRET,
+          user.address,
+          user.phone,
+          user.country,
+          user.website,
+          user.role_id,
         ],
         (err, results) => {
           if (err) {
             response.status(500).send(err);
+            console.log(err);
           } else {
             response.status(201).send({ id: results.insertId });
+            console.log(results);
           }
         }
       );
