@@ -20,7 +20,7 @@ const uploadFile = multer({
     ) {
       cb(null, true);
     } else {
-      cb(new multer.MulterError("Ce type de fichier n'est pas supporté"));
+      cb(new multer.MulterError('erreur'));
     }
   },
   dest: 'tmp/',
