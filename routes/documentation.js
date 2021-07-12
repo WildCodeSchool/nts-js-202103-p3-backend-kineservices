@@ -5,7 +5,28 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 
-const upload = multer({ dest: 'tmp/' });
+const uploadFile = multer({
+  limits: { fileSize: Infinity },
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === 'application/pdf' ||
+      file.mimetype === 'application/msword' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      file.mimetype === 'application/vnd.ms-powerpoint' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+      file.mimetype === 'application/vnd.oasis.opendocument.text' ||
+      file.mimetype === 'application/vnd.amazon.ebook' ||
+      file.mimetype === 'application/epub+zip'
+    ) {
+      cb(null, true);
+    } else {
+      cb(new multer.MulterError('erreur'));
+    }
+  },
+  dest: 'tmp/',
+});
 const fs = require('fs');
 const pool = require('../config/mysql');
 
@@ -36,7 +57,7 @@ router.get('/:id', function (request, response) {
   );
 });
 
-router.post('/', upload.single('file'), (request, response) => {
+router.post('/', uploadFile.single('file'), (request, response) => {
   const documentation = request.body;
   const folder = `public/images/${documentation.user_id}/`;
   fs.mkdirSync(folder, { recursive: true });
