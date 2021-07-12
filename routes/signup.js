@@ -6,9 +6,11 @@ const pool = require('../config/mysql');
 
 router.post('/', (request, response) => {
   const { formContent } = request.body;
+  console.log(formContent);
   bcrypt.hash(formContent.password, 10, (error, hash) => {
     if (error) {
       response.status(500).send(error);
+      console.log(error)
     } else {
       pool.query(
         'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, siret, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -30,6 +32,7 @@ router.post('/', (request, response) => {
         (err, results) => {
           if (err) {
             response.status(500).send(err);
+            console.log(err)
           } else {
             response.status(201).send({ id: results.insertId });
           }
