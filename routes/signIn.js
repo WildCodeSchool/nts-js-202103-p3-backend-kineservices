@@ -37,6 +37,7 @@ router.post('/', authJwt, (request, response) => {
                 });
                 response.status(200).send({ user, token });
               } else if (error) {
+                console.log(error);
                 response.send(error);
               } else {
                 response.status(403).send('Votre mot de passe est eronné');

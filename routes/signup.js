@@ -24,13 +24,15 @@ const pool = require('../config/mysql');
 
 router.post('/', upload.single('picture'), (request, response) => {
   const formUser = request.body;
-  const accessFile = `images/${formUser.firstname}-${formUser.lastname}-${formUser.birthdate}/`;
-  const folder = `public/images/${formUser.firstname}-${formUser.lastname}-${formUser.birthdate}/`;
+  const accessFile = `images/${formUser.firstname}-${formUser.lastname}-${formUser.birthdate}`;
+  const folder = `public/images/${formUser.firstname}-${formUser.lastname}-${formUser.birthdate}`;
   fs.mkdirSync(folder, { recursive: true });
-  const fileName = `${accessFile}${request.file.originalname}`;
-  fs.rename(request.file.path, `public/${fileName}`, function (fileErr) {
-    if (fileErr) {
-      response.status(500).send(fileErr);
+  const fileName = `${accessFile}/${request.file.originalname
+    .split(' ')
+    .join('_')}`;
+  fs.rename(request.file.path, `public/${fileName}`, function (err) {
+    if (err) {
+      response.status(500).send(err);
     } else {
       bcrypt.hash(formUser.password, 10, (error, hash) => {
         if (error) {
