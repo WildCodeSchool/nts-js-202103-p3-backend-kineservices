@@ -21,6 +21,8 @@ app.use(
 );
 app.use(express.static('public'));
 
+app.use(express.static('public'));
+
 app.use('/documentation', documentationRouter);
 app.use('/category', categoryRouter);
 app.use('/service', serviceRouter);
