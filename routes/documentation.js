@@ -31,13 +31,16 @@ const fs = require('fs');
 const pool = require('../config/mysql');
 
 router.get('/', function (request, response) {
-  pool.query('SELECT * FROM documentation', (error, results) => {
-    if (error) {
-      response.status(500).send(error);
-    } else {
-      response.send(results);
+  pool.query(
+    'select * from documentation join category where documentation.category_id=category.id;',
+    (error, results) => {
+      if (error) {
+        response.status(500).send(error);
+      } else {
+        response.send(results);
+      }
     }
-  });
+  );
 });
 
 router.get('/:id', function (request, response) {
