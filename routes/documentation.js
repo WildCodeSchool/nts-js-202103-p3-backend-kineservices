@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 /* eslint-disable func-names */
 const express = require('express');
+const multer = require('multer');
 
 const router = express.Router();
-const multer = require('multer');
 
 const uploadFile = multer({
   limits: { fileSize: Infinity },

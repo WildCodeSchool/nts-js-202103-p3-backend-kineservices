@@ -12,7 +12,7 @@ router.post('/', authJwt, (request, response) => {
   if (!email || !password) {
     response
       .status(400)
-      .send('Veuillez sasir votre mot de passe ou votre email');
+      .send('Veuillez saisir votre mot de passe ou votre email');
   } else {
     pool.query(
       'SELECT * FROM user WHERE email = ?',
