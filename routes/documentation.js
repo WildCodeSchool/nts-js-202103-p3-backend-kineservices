@@ -62,14 +62,13 @@ router.get('/:id', function (request, response) {
 
 router.post('/', uploadFile.single('file'), (request, response) => {
   const documentation = request.body;
-  const accesFile = `images/${documentation.user_id}`;
+  const accessFile = `images/${documentation.user_id}`;
   const folder = `public/images/${documentation.user_id}/`;
   fs.mkdirSync(folder, { recursive: true });
-  const fileName = `${accesFile}/${Date.now()}-${request.file.originalname}`;
+  const fileName = `${accessFile}/${Date.now()}-${request.file.originalname}`;
   fs.rename(request.file.path, `public/${fileName}`, function (err) {
     if (err) {
       response.status(500).send(err);
-      console.log(err);
     } else {
       pool.query(
         `INSERT INTO documentation(title, category_id, user_id, description, price, file) VALUES (?, ?, ?, ?, ?, ?)`,
