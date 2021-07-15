@@ -19,6 +19,9 @@ app.use(
     origin: process.env.FRONTEND_URL,
   })
 );
+app.use(express.static('public'));
+
+app.use(express.static('public'));
 
 app.use('/documentation', documentationRouter);
 app.use('/category', categoryRouter);

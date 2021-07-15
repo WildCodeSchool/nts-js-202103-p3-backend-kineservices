@@ -2,41 +2,69 @@ const express = require('express');
 
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const multer = require('multer');
 
+const upload = multer({
+  limits: { fileSize: Infinity },
+  fileFilter: (request, file, cb) => {
+    if (
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'image/jpg'
+    ) {
+      cb(null, true);
+    } else {
+      cb(new multer.MulterError('erreur'));
+    }
+  },
+  dest: 'tmp/',
+});
+const fs = require('fs');
 const pool = require('../config/mysql');
 
-router.post('/', (request, response) => {
-  const { formContent } = request.body;
-  console.log(formContent);
-  bcrypt.hash(formContent.password, 10, (error, hash) => {
-    if (error) {
-      response.status(500).send(error);
+router.post('/', upload.single('picture'), (request, response) => {
+  const formUser = request.body;
+  const accessFile = `images/${formUser.firstname}-${formUser.lastname}-${formUser.birthdate}`;
+  const folder = `public/images/${formUser.firstname}-${formUser.lastname}-${formUser.birthdate}`;
+  fs.mkdirSync(folder, { recursive: true });
+  const fileName = `${accessFile}/${request.file.originalname
+    .split(' ')
+    .join('_')}`;
+  fs.rename(request.file.path, `public/${fileName}`, function (err) {
+    if (err) {
+      response.status(500).send(err);
     } else {
-      pool.query(
-        'INSERT INTO user (firstname, lastname, birthdate, email, password, RPPS, siret, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-        [
-          formContent.firstname,
-          formContent.lastname,
-          // formContent.picture,
-          formContent.birthdate,
-          formContent.email,
-          hash,
-          formContent.RPPS,
-          formContent.siret,
-          formContent.address,
-          formContent.phone,
-          formContent.country,
-          formContent.website,
-          formContent.role_id,
-        ],
-        (err, results) => {
-          if (err) {
-            response.status(500).send(err);
-          } else {
-            response.status(201).send({ id: results.insertId });
-          }
+      bcrypt.hash(formUser.password, 10, (error, hash) => {
+        if (error) {
+          response.status(500).send(error);
+        } else {
+          pool.query(
+            'INSERT INTO user (firstname, lastname,picture, birthdate, email, password, RPPS, SIRET, address, phone, country, website, role_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [
+              formUser.firstname,
+              formUser.lastname,
+              fileName,
+              formUser.birthdate,
+              formUser.email,
+              hash,
+              formUser.RPPS,
+              formUser.SIRET,
+              formUser.address,
+              formUser.phone,
+              formUser.country,
+              formUser.website,
+              formUser.role_id,
+            ],
+            (err, results) => {
+              if (err) {
+                response.status(500).send(err);
+              } else {
+                response.status(201).send({ id: results.insertId });
+              }
+            }
+          );
         }
-      );
+      });
     }
   });
 });
