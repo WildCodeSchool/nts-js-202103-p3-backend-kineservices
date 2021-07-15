@@ -3,20 +3,46 @@
 const express = require('express');
 
 const router = express.Router();
+const multer = require('multer');
+
+const uploadFile = multer({
+  limits: { fileSize: Infinity },
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === 'application/pdf' ||
+      file.mimetype === 'application/msword' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      file.mimetype === 'application/vnd.ms-powerpoint' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+      file.mimetype === 'application/vnd.oasis.opendocument.text' ||
+      file.mimetype === 'application/vnd.amazon.ebook' ||
+      file.mimetype === 'application/epub+zip'
+    ) {
+      cb(null, true);
+    } else {
+      cb(new multer.MulterError('erreur'));
+    }
+  },
+  dest: 'tmp/',
+});
+const fs = require('fs');
 const pool = require('../config/mysql');
 
-// trouver all doc
 router.get('/', function (request, response) {
-  pool.query('SELECT * FROM documentation', (error, results) => {
-    if (error) {
-      response.status(500).send(error);
-    } else {
-      response.send(results);
+  pool.query(
+    'SELECT * FROM documentation JOIN category ON documentation.category_id WHERE documentation.category_id=category.id;',
+    (error, results) => {
+      if (error) {
+        response.status(500).send(error);
+      } else {
+        response.send(results);
+      }
     }
-  });
+  );
 });
 
-// trouver avec id
 router.get('/:id', function (request, response) {
   const { id } = request.params;
   pool.query(
@@ -34,45 +60,53 @@ router.get('/:id', function (request, response) {
   );
 });
 
-// create
-router.post('/', (request, response) => {
+router.post('/', uploadFile.single('file'), (request, response) => {
   const documentation = request.body;
-  pool.query(
-    `INSERT INTO documentation(title, category_id, user_id, description, price) VALUES (?, ?, ?, ?, ?)`,
-    [
-      documentation.title,
-      documentation.category_id,
-      documentation.user_id,
-      documentation.description,
-      documentation.price,
-    ],
-    (error, results) => {
-      if (error) {
-        response.status(500).send(error);
-      } else {
-        response.status(201).send({
-          id: results.insertId,
-          ...documentation,
-        });
-      }
+  const accesFile = `images/${documentation.user_id}`;
+  const folder = `public/images/${documentation.user_id}/`;
+  fs.mkdirSync(folder, { recursive: true });
+  const fileName = `${accesFile}/${Date.now()}-${request.file.originalname}`;
+  fs.rename(request.file.path, `public/${fileName}`, function (err) {
+    if (err) {
+      response.status(500).send(err);
+      console.log(err);
+    } else {
+      pool.query(
+        `INSERT INTO documentation(title, category_id, user_id, description, price, file) VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          documentation.title,
+          documentation.category_id,
+          documentation.user_id,
+          documentation.description,
+          documentation.price,
+          fileName,
+        ],
+        (error, results) => {
+          if (error) {
+            response.status(500).send(error);
+          } else {
+            response.status(201).send({
+              id: results.insertId,
+              ...documentation,
+            });
+          }
+        }
+      );
     }
-  );
+  });
 });
 
-// update
 router.put('/:id', (request, response) => {
-  const { title, category_id, user_id, description, price } = request.body;
+  const result = request.body;
   const { id } = request.params;
   pool.query(
-    'UPDATE documentation SET title, category_id, user_id, description, price = ? WHERE id = ?',
-    [title, category_id, user_id, description, price, id],
+    'UPDATE documentation SET ? WHERE id = ?',
+    [result, id],
     (error, results) => {
       if (error) {
         response.status(500).send(error);
       } else if (results.affectedRows > 0) {
-        response
-          .status(200)
-          .send({ id, title, category_id, user_id, description, price });
+        response.status(200).send(result);
       } else {
         response.sendStatus(404);
       }
@@ -80,7 +114,6 @@ router.put('/:id', (request, response) => {
   );
 });
 
-// delete
 router.delete('/:id', (request, response) => {
   const { id } = request.params;
   pool.query(
