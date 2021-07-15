@@ -6,6 +6,19 @@ const router = express.Router();
 const pool = require('../config/mysql');
 
 router.get('/', function (request, response) {
+  pool.query(
+    'SELECT * FROM formation JOIN category ON formation.category_id WHERE formation.category_id=category.id;',
+    (error, results) => {
+      if (error) {
+        response.status(500).send(error);
+      } else {
+        response.send(results);
+      }
+    }
+  );
+});
+
+router.get('/', function (request, response) {
   pool.query('SELECT * FROM formation', (error, results) => {
     if (error) {
       response.status(500).send(error);
