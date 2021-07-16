@@ -21,12 +21,6 @@ app.use(
 );
 app.use(express.static('public'));
 
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
 app.use('/documentation', documentationRouter);
 app.use('/category', categoryRouter);
 app.use('/service', serviceRouter);
