@@ -18,7 +18,6 @@ router.post('/:id', (request, response) => {
 router.put('/', (request, response) => {
   const { updateUser } = request.body;
   const updateId = request.body.updateUser.id;
-  console.log(updateUser);
   if (updateUser.birthdate) {
     const bParts = updateUser.birthdate.split('/');
     updateUser.birthdate = new Date(
