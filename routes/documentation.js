@@ -32,7 +32,7 @@ const pool = require('../config/mysql');
 
 router.get('/', function (request, response) {
   pool.query(
-    'SELECT * FROM documentation JOIN category ON documentation.category_id WHERE documentation.category_id=category.id;',
+    'SELECT documentation.*, category.name FROM documentation JOIN category ON documentation.category_id WHERE documentation.category_id=category.id;',
     (error, results) => {
       if (error) {
         response.status(500).send(error);
