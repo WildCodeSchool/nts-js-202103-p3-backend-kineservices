@@ -7,7 +7,7 @@ const pool = require('../config/mysql');
 
 router.get('/', function (request, response) {
   pool.query(
-    'SELECT * FROM formation JOIN category ON formation.category_id WHERE formation.category_id=category.id;',
+    'SELECT formation.* FROM formation JOIN category ON formation.category_id WHERE formation.category_id=category.id;',
     (error, results) => {
       if (error) {
         response.status(500).send(error);
@@ -44,13 +44,12 @@ router.get('/:id', (request, response) => {
 router.post('/', (request, response) => {
   const formation = request.body;
 
-  const user_id = 2; // monsieur poulpe est le seul utilisateur à pouvoir publier pour le moment
   pool.query(
     `INSERT INTO formation (title, category_id, user_id, date, price, website, description) VALUES (?,?,?,?,?,?,?)`,
     [
       formation.title,
       formation.category_id,
-      user_id,
+      formation.user_id,
       formation.date,
       formation.price,
       formation.website,
