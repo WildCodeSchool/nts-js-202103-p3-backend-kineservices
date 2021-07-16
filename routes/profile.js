@@ -18,10 +18,14 @@ router.post('/:id', (request, response) => {
 router.put('/', (request, response) => {
   const { updateUser } = request.body;
   const updateId = request.body.updateUser.id;
-  console.log(updateId);
   console.log(updateUser);
   if (updateUser.birthdate) {
-    updateUser.birthdate = new Date();
+    const bParts = updateUser.birthdate.split('/');
+    updateUser.birthdate = new Date(
+      parseInt(bParts[2], 10),
+      parseInt(bParts[1], 10) - 1,
+      parseInt(bParts[0], 10)
+    );
   }
   pool.query(
     'UPDATE user SET ? WHERE id = ?',

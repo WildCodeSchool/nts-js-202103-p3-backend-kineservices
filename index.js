@@ -8,6 +8,7 @@ const signIn = require('./routes/signIn');
 const formationRouter = require('./routes/formation');
 const userRouter = require('./routes/profile');
 const serviceRouter = require('./routes/service');
+const putBcrypt = require('./routes/putBcrypt');
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use('/formation', formationRouter);
 app.use('/profil', userRouter);
 app.use('/signup', signupRouter);
 app.use('/utilisateur', userRouter);
+app.use('/putBcrypt', putBcrypt);
 
 app.listen(port, () => {
   console.log(`Express server listening on ${port}`);
