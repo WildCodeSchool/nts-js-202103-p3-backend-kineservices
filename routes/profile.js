@@ -15,14 +15,20 @@ router.post('/:id', (request, response) => {
   });
 });
 
-router.put('/:id', (request, response) => {
-  const userToUpdate = request.body;
-  const { id } = request.params;
+router.put('/', (request, response) => {
+  const { updateUser } = request.body;
+  const updateId = request.body.updateUser.id;
+  console.log(updateId);
+  console.log(updateUser);
+  if (updateUser.birthdate) {
+    updateUser.birthdate = new Date();
+  }
   pool.query(
     'UPDATE user SET ? WHERE id = ?',
-    [userToUpdate, id],
+    [updateUser, updateId],
     (error, results) => {
       if (error) {
+        console.log(error);
         response.status(500).send(error);
       } else if (results.affectedRows > 0) {
         response.status(200).send(results);
